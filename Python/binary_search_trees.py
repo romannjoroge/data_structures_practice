@@ -24,8 +24,10 @@ class Node():
                 previous_left = self.left
                 self.left = node
                 self.left.assign_left(previous_left)
+            elif node == self.left:
+                pass
             else:
-                raise "new node is smaller than existing left can't insert it here"
+                self.left.assign_left(node=node)
             
     def assign_right(self, node: "Node"):
         """
@@ -47,8 +49,10 @@ class Node():
                 previous_right = self.right
                 self.right = node
                 self.right.assign_right(previous_right)
+            elif node == self.right:
+                pass
             else:
-                raise "new node is greater than right node, should not be assigned here"
+                self.right.assign_right(node=node)
         
             
     def __repr__(self):
@@ -63,9 +67,85 @@ class Node():
         if isinstance(other, Node):
             return self.value > other.value
         return NotImplemented
+    
+    def __eq__(self, other):
+        if isinstance(other, Node):
+            return self.value == other.value
+        elif other == None:
+            return False
+        return NotImplemented
 
-root = Node(10)
-root.assign_right(Node(15))
-root.assign_right(Node(11))
-
-print(f"root node is {root} and its right child is {root.right} and its right child is {root.right.right}")
+class BinarySearchTree():
+    def __init__(self, root: Node):
+        self.root = root
+        
+    def insert(self, node: Node):
+        """
+        Docstring for insert
+        
+        :param self: Description
+        :param node: node to insert to tree
+        :type node: Node
+        
+        The place for the node is looked for in the tree. If the value is less than root insert it in left
+        otherwise insert it as right
+        """
+        if node < self.root:
+            self.root.assign_left(node=node)
+        elif node > self.root:
+            self.root.assign_right(node=node)
+        else:
+            print(f"node {node} is same as root {self.root}")
+            pass
+        
+    def search(self, num: int) -> bool:
+        """
+        Docstring for search
+        Checks if an item is in tree
+        
+        :param self: Description
+        :param num: Number to search for in binary search tree
+        :type num: int
+        """
+        # We start search at tree
+        node_to_consider = self.root
+        
+        while True:
+            # If root is equal to value return true
+            if node_to_consider.value == num:
+                return True
+            
+            # Otherwise if it is greater look at the right child, if no right child return False
+            elif num > node_to_consider.value:
+                if node_to_consider.right:
+                    node_to_consider = node_to_consider.right
+                else:
+                    return False
+             # If it is less look at the left child, if no left child return false
+            else:
+                if node_to_consider.left:
+                    node_to_consider = node_to_consider.left
+                else:
+                    return False
+        
+    def __repr__(self):
+        tree_string = ""
+        nodes = [self.root]
+        while len(nodes) > 0:
+            node_to_print = nodes.pop(0)
+            tree_string += f"node is {node_to_print}, its left child is {node_to_print.left} and its right is {node_to_print.right}\n"
+            if node_to_print.right:
+                nodes.append(node_to_print.right)
+            if node_to_print.left:
+                nodes.append(node_to_print.left)
+                
+        return tree_string
+    
+tree = BinarySearchTree(root=Node(100))
+tree.insert(Node(50))
+tree.insert(Node(70))
+tree.insert(Node(110))
+tree.insert(Node(200))
+print(tree)
+print(tree.search(200))
+        

@@ -6,6 +6,25 @@ class Heap:
         # Build min heap
         for i in range(self.size // 2, -1, -1):
             self.__heapify_down(i)
+            
+    def sort(self):
+        """
+        Docstring for sort
+        
+        Sorts the array using heap sort. Since its called after constructor items is already a heap
+        """
+        # While size of unsorted array is greater than zero
+        while self.size - 1 > 0:
+            print(f"unsorted size: {self.size} heap before swap -> {self.items}")
+            # Swap first item with last item
+            self.items[0], self.items[self.size - 1] = self.items[self.size - 1], self.items[0]
+            
+            print(f"heap after swap -> {self.items}")
+            # Decrement unsorted array size
+            self.size -= 1
+            
+            # Heapify
+            self.__heapify_down(0)
         
     def get_min(self) -> int:
         assert len(self.items) > 0, "Min Heap is empty"
@@ -16,30 +35,6 @@ class Heap:
         self.items.append(value)
         self.size += 1
         self.__heapify(self.size - 1)
-    
-    def __heapify(self, index: int):
-        """
-        This takes a partial min heap and transforms it to a heap
-        
-        A partial min heap is one where there are already nodes that follow min heap property
-        but the node at index could possibly be not following min heap property
-        """    
-        print(f"Called heapify on index {index} with items {self.items}")
-        # If index is 0 do nothing
-        if index == 0:
-            return
-        
-        # Check if min heap property is maintained for node at index and its parent
-        child_value = self.items[index]
-        parent_index, parent_value = self.__get_parent(index)
-        print(f"Got parent at index {parent_index} with value: {parent_value}")
-        if parent_value <= child_value:
-            print("Already follows min heap property")
-        else:
-            print("Does not follow min heap property");
-            # If not maintained swap them and recheck for parent
-            self.items[parent_index], self.items[index] = self.items[index], self.items[parent_index]
-            self.__heapify(parent_index)
         
         
     def __get_parent(self, child_index: int) -> tuple[int, int]:
@@ -143,4 +138,5 @@ class Heap:
         return f'Heap -> {self.items}'
     
 heap_1 = Heap([6,5,4,3,2,1])
+heap_1.sort()
 print(heap_1)

@@ -163,7 +163,7 @@ class BinarySearchTree():
             if value < parent.value:
                 # If there is no left child determine that node is not in tree
                 if parent.left == None:
-                    raise "node is not in tree"
+                    raise Exception("node is not in tree")
                 # If there is left child check if that is the node we are looking for
                 elif parent.left.value == value:
                     # If it is the node set it as node
@@ -175,7 +175,7 @@ class BinarySearchTree():
             else:
                 # If there is no right child determine that node is not in tree
                 if parent.right == None:
-                    raise "node is not in tree"
+                    raise Exception("node is not in tree")
                 # If there is a right child check its value
                 elif parent.right.value == value:
                     # If it is the same set node to right child
@@ -205,6 +205,75 @@ class BinarySearchTree():
         # If it has 2 children call delete_2_children
         else:
             self.__delete_2_children(node=node)
+            
+    def preorder(self, node: Node | None):
+        """
+        Docstring for preorder
+        
+        :param self: Description
+        :param node: node that is being visited
+        :type node: Node | None
+        
+        If node is none it means we are visiting the root
+        """
+        # Visit the current node (if node is None make it the root)
+        if node == None:
+            node = self.root
+        print(node)
+        
+        # Traverse the left child
+        if node.left:
+            self.preorder(node.left)
+        
+        # Traverse the right child
+        if node.right:
+            self.preorder(node.right)
+            
+    def inorder(self, node: Node | None):
+        """
+        Docstring for inorder
+        
+        :param self: Description
+        :param node: node to start traversal from, if None it is the root
+        :type node: Node | None
+        """
+        # If node is None set it to root
+        if node == None:
+            node = self.root
+        
+        # If node has a left child visit it
+        if node.left:
+            self.inorder(node.left)
+        
+        # Visit node
+        print(node)
+        
+        # If node has right child visit it
+        if node.right:
+            self.inorder(node.right)
+            
+    def postorder(self, node: Node | None):
+        """
+        Docstring for postorder
+        
+        :param self: Description
+        :param node: node to visit
+        :type node: Node | None
+        """
+        # If node is None set it to root
+        if node == None:
+            node = self.root
+        
+        # If node has a left child visit it
+        if node.left:
+            self.postorder(node.left)
+        
+        # If node has a right child visit it
+        if node.right:
+            self.postorder(node.right)
+        
+        # Visit node
+        print(node)
         
     def __delete_2_children(self, node: Node):
         """
@@ -219,22 +288,15 @@ class BinarySearchTree():
         # We look for the node in the right subtree with the smallest value
         # Set smallest to right child
         smallest = node.right
-        # Keep track of its parent set it to node
-        parent = node
         
         # While there is a left child smallest.left
         while smallest.left != None:
-            # Update parent to smallest and smallest to left
-            parent = smallest
+            # Update smallest to left
             smallest = smallest.left
         
         # After getting smallest value in right sub tree replace node's value with that of the smallest
         self.delete(smallest.value)
-        node.value = smallest.value
-        # Replace parents left node to None
-        
-        
-        
+        node.value = smallest.value        
         
     def __repr__(self):
         tree_string = ""
@@ -255,6 +317,6 @@ tree.insert(Node(70))
 tree.insert(Node(110))
 tree.insert(Node(200))
 print(tree)
-tree.delete(100)
-print(tree)
+
+tree.postorder(None)
         

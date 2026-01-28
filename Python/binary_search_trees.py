@@ -127,6 +127,114 @@ class BinarySearchTree():
                     node_to_consider = node_to_consider.left
                 else:
                     return False
+                
+    def delete(self, value: int): 
+        """
+        Docstring for delete
+        
+        :param self: Description
+        :param value: the value of the node we are deleting
+        :type node: int
+        
+        A node that we're deleting can fall in one of these 3 cases:
+        1. A node with no children
+        2. A node with 1 child
+        3. A node with 2 children
+        
+        If a node has no child we can safely delete it i.e. update where it was in its parent to null
+        If a node n has 1 child c we can go to its parent p, update where it was (p pointer to n) to that of the child c of the node n
+        """
+        # The node we're deleting could be the root
+        # If it is the root call delete_2_children on root and end
+        if self.root.value == value:
+            print(f"Value {value} was root {self.root}");
+            self.__delete_2_children(self.root)
+            return
+        
+        # If it is not the root we look for the node as we keep track of the parent
+        # Set initial parent to root
+        parent = self.root
+        # Set initial node to None
+        node = None
+        
+        # As we are searching while node = None
+        while node == None:
+            # If value is less than parent check for node in left child
+            if value < parent.value:
+                # If there is no left child determine that node is not in tree
+                if parent.left == None:
+                    raise "node is not in tree"
+                # If there is left child check if that is the node we are looking for
+                elif parent.left.value == value:
+                    # If it is the node set it as node
+                    node = parent.left
+                # If not set it as parent and repeat
+                else:
+                    parent = parent.left
+            # Else check the node in the right
+            else:
+                # If there is no right child determine that node is not in tree
+                if parent.right == None:
+                    raise "node is not in tree"
+                # If there is a right child check its value
+                elif parent.right.value == value:
+                    # If it is the same set node to right child
+                    node = parent.right
+                # Otherwise make it the parent and repeat
+                else:
+                    parent = parent.right
+        
+        # Check if the node has children
+        # If it has no children go to the parent and remove it (if less than set less to None in parent otherwise make right None)
+        if node.right == None and node.left == None:
+            if node < parent:
+                parent.left = None
+            else:
+                parent.right = None
+        # If it has one child go to the parent, replace its point to node n to that of the child c (left if node is smaller otherwise right)
+        elif (node.right == None and node.left != None):
+            if node < parent:
+                parent.left = node.left
+            else:
+                parent.right = node.left
+        elif node.right != None and node.left == None:
+            if node < parent:
+                parent.left = node.right
+            else:
+                parent.right= node.right
+        # If it has 2 children call delete_2_children
+        else:
+            self.__delete_2_children(node=node)
+        
+    def __delete_2_children(self, node: Node):
+        """
+        Docstring for __delete_2_children
+        
+        Helper function for dealing with scenario where we're deleting a node that has 2 children.
+        
+        :param self: Description
+        :param node: Node to delete
+        :type node: Node
+        """
+        # We look for the node in the right subtree with the smallest value
+        # Set smallest to right child
+        smallest = node.right
+        # Keep track of its parent set it to node
+        parent = node
+        
+        # While there is a left child smallest.left
+        while smallest.left != None:
+            # Update parent to smallest and smallest to left
+            parent = smallest
+            smallest = smallest.left
+        
+        # After getting smallest value in right sub tree replace node's value with that of the smallest
+        self.delete(smallest.value)
+        node.value = smallest.value
+        # Replace parents left node to None
+        
+        
+        
         
     def __repr__(self):
         tree_string = ""
@@ -147,5 +255,6 @@ tree.insert(Node(70))
 tree.insert(Node(110))
 tree.insert(Node(200))
 print(tree)
-print(tree.search(200))
+tree.delete(100)
+print(tree)
         

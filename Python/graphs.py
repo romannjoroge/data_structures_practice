@@ -41,6 +41,35 @@ class Graph():
                     # If not visited add them to end of queue
                     queue.append(neighbour)
                     
+    def depth_first_search(self, first_node: int):
+        """
+        Docstring for depth_first_search
+        
+        :param self: Description
+        :param first_node: Node to start traversal from
+        :type first_node: int
+        """
+        # Have a stack to track what nodes to visit next
+        stack = []
+        # Have a list of visited nodes
+        visited_nodes = []
+        # Put the first item in the stack
+        stack.append(first_node)
+        
+        # While there are nodes to visit in the stack
+        while len(stack) > 0:
+            # Remove item at the top of the stack
+            top = stack.pop(0)
+            # Visit the item and add it to visited list
+            print(top)
+            visited_nodes.append(top)
+            
+            # For all of the neighbours in the stack
+            for neighbour in self.adjacency_list[top]:
+                # If neighbour hasn't been visited add it to the top of the stack
+                if neighbour not in visited_nodes:
+                    stack.insert(0, neighbour)
+                    
         
 graph = Graph()
-graph.breadth_first_search(1)
+graph.depth_first_search(1)
